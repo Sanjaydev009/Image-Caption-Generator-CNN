@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Caption Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        .upload-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        .upload-area:hover {
+            border-color: #2980b9;
+            background-color: #f7f9fb;
+        }
+        .upload-area.active {
+            border-color: #27ae60;
+            background-color: #f0f7f4;
+        }
+        .upload-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        .upload-text {
+            color: #7f8c8d;
+        }
+        .upload-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-btn:hover {
+            background-color: #2980b9;
+        }
+        .upload-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #file-input {
+            display: none;
+        }
+        .results-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            display: none;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .image-container {
+            text-align: center;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .caption-container {
+            padding: 1rem;
+        }
+        .caption-box {
+            background-color: #f7f9fb;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            padding: 1.5rem;
+        }
+        .caption-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        .caption-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #34495e;
+        }
+        .alt-captions-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 0.8rem;
+        }
+        .alt-caption-item {
+            background-color: #f8f9fa;
+            border-left: 3px solid #3498db;
+            padding: 0.8rem 1rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            line-height: 1.4;
+            color: #34495e;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .alt-caption-item:hover {
+            background-color: #eaeef2;
+            transform: translateX(3px);
+        }
+        .alt-caption-item.selected {
+            border-left: 3px solid #27ae60;
+            background-color: #eafaf1;
+        }
+        @media (min-width: 768px) {
+            .alt-captions-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+        .feature-stats {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ecf0f1;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            background-color: #ffeaea;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* Language selector styles */
+        .translation-container {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ecf0f1;
+            display: none;
+        }
+        
+        .language-selector {
+            margin-bottom: 1rem;
+        }
+        
+        .language-selector label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .language-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .translate-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 0.5rem;
+        }
+        
+        .translate-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        .translate-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .translated-caption {
+            background-color: #f8f9fa;
+            border-left: 4px solid #9b59b6;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .translated-caption-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+        
+        .translated-caption-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Caption Generator</h1>
+            <p class="subtitle">Upload an image and get an AI-generated caption</p>
+            
+        </header>
+        
+        <div class="upload-container">
+            <div id="upload-area" class="upload-area">
+                <div class="upload-icon">📷</div>
+                <p class="upload-text">Drag & drop an image or click to browse</p>
+                <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg">
+            </div>
+            <div style="text-align: center;">
+                <button id="upload-btn" class="upload-btn" disabled>Generate Caption</button>
+            </div>
+            <div id="error-message" class="error-message"></div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Generating caption...</p>
+        </div>
+        
+        <div id="results-container" class="results-container">
+            <div class="results-grid">
+                <div class="image-container">
+                    <img id="preview-image" class="preview-image" src="" alt="Uploaded Image">
+                    <div id="image-info" class="image-info" style="margin-top: 1rem; font-size: 0.9rem; color: #7f8c8d;"></div>
+                </div>
+                <div class="caption-container">
+                    <div class="caption-box">
+                        <div class="caption-title">Best Generated Caption:</div>
+                        <p id="caption-text" class="caption-text"></p>
+                        <div id="caption-source" style="margin-top: 0.5rem; font-size: 0.9rem; color: #7f8c8d;"></div>
+                        
+                        <div id="alternative-captions" style="margin-top: 1.5rem; display: none;">
+                            <div style="font-weight: bold; margin-bottom: 0.8rem; color: #2c3e50; font-size: 1.1rem;">Alternative Captions:</div>
+                            <div id="alt-captions-list" class="alt-captions-grid"></div>
+                        </div>
+                    </div>
+                    <div id="image-analysis" class="feature-stats" style="margin-top: 1rem; border-top: 1px solid #ecf0f1; padding-top: 1rem;">
+                        <p><strong>Image Analysis:</strong></p>
+                        <div id="analysis-details"></div>
+                    </div>
+                    <div id="feature-stats" class="feature-stats"></div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button id="generate-new" class="upload-btn" style="background-color: #27ae60;">Generate Another Caption</button>
+                        <button id="upload-new" class="upload-btn" style="background-color: #e67e22; margin-left: 0.5rem;">Upload New Image</button>
+                    </div>
+                    
+                    <!-- Language Translation Section -->
+                    <div id="translation-container" class="translation-container">
+                        <div class="language-selector">
+                            <label for="language-select">Translate caption to:</label>
+                            <select id="language-select" class="language-select">
+                                <option value="">Select a language</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ru">Russian</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="zh">Chinese (Simplified)</option>
+                                <option value="zh-tw">Chinese (Traditional)</option>
+                                <option value="ar">Arabic</option>
+                                <option value="hi">Hindi</option>
+                                <option value="th">Thai</option>
+                                <option value="vi">Vietnamese</option>
+                                <option value="nl">Dutch</option>
+                                <option value="sv">Swedish</option>
+                                <option value="da">Danish</option>
+                                <option value="no">Norwegian</option>
+                                <option value="fi">Finnish</option>
+                                <option value="pl">Polish</option>
+                                <option value="tr">Turkish</option>
+                                <option value="he">Hebrew</option>
+                                <option value="cs">Czech</option>
+                                <option value="hu">Hungarian</option>
+                                <option value="ro">Romanian</option>
+                                <option value="bg">Bulgarian</option>
+                                <option value="hr">Croatian</option>
+                                <option value="sk">Slovak</option>
+                                <option value="sl">Slovenian</option>
+                                <option value="et">Estonian</option>
+                                <option value="lv">Latvian</option>
+                                <option value="lt">Lithuanian</option>
+                                <option value="mt">Maltese</option>
+                            </select>
+                            <button id="translate-btn" class="translate-btn" disabled>Translate</button>
+                        </div>
+                        
+                        <div id="translated-caption" class="translated-caption">
+                            <div class="translated-caption-title">Translated Caption:</div>
+                            <div id="translated-caption-text" class="translated-caption-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by Advanced AI Image Captioning Models</p>
+        </footer>
+    </div>
+    
+    <script>
+        // DOM elements
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const uploadBtn = document.getElementById('upload-btn');
+        const loadingDiv = document.getElementById('loading');
+        const resultsContainer = document.getElementById('results-container');
+        const previewImage = document.getElementById('preview-image');
+        const captionText = document.getElementById('caption-text');
+        const featureStats = document.getElementById('feature-stats');
+        const errorMessage = document.getElementById('error-message');
+        const imageInfo = document.getElementById('image-info');
+        const captionSource = document.getElementById('caption-source');
+        const alternativeCaptions = document.getElementById('alternative-captions');
+        const altCaptionsList = document.getElementById('alt-captions-list');
+        const generateNewBtn = document.getElementById('generate-new');
+        const uploadNewBtn = document.getElementById('upload-new');
+        const translationContainer = document.getElementById('translation-container');
+        const languageSelect = document.getElementById('language-select');
+        const translateBtn = document.getElementById('translate-btn');
+        const translatedCaption = document.getElementById('translated-caption');
+        const translatedCaptionText = document.getElementById('translated-caption-text');
+        
+        // Selected file
+        let selectedFile = null;
+        let currentCaption = '';
+        
+        // Language selector event listeners
+        languageSelect.addEventListener('change', () => {
+            translateBtn.disabled = !languageSelect.value;
+            translatedCaption.style.display = 'none';
+        });
+        
+        translateBtn.addEventListener('click', () => {
+            translateCaption();
+        });
+        
+        // Event listeners for drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('active');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('active');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('active');
+            
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // Click to upload
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        // Handle the selected file
+        function handleFile(file) {
+            // Check if it's an image
+            if (!file.type.match('image.*')) {
+                showError('Please select an image file (JPEG or PNG)');
+                return;
+            }
+            
+            selectedFile = file;
+            uploadBtn.disabled = false;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            
+            // Show file info
+            imageInfo.textContent = `File: ${file.name} (${formatFileSize(file.size)})`;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+        
+        // Upload and process the image
+        uploadBtn.addEventListener('click', () => {
+            processSelectedImage();
+        });
+        
+        function processSelectedImage() {
+            if (!selectedFile) return;
+            
+            // Hide error if any
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loadingDiv.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+                
+                // Show results
+                resultsContainer.style.display = 'block';
+                captionText.textContent = data.caption;
+                currentCaption = data.caption;
+                
+                // Show translation container
+                translationContainer.style.display = 'block';
+                languageSelect.value = '';
+                translateBtn.disabled = true;
+                translatedCaption.style.display = 'none';
+                
+                // Show caption source if available
+                if (data.caption_source) {
+                    let sourceText = "";
+                    switch(data.caption_source) {
+                        case "transformer":
+                            sourceText = "Generated by advanced AI model";
+                            break;
+                        case "neural":
+                            sourceText = "Generated by neural network";
+                            break;
+                        case "rule-based":
+                            sourceText = "Generated by rule-based analysis";
+                            break;
+                        case "category":
+                            sourceText = "Selected from category templates";
+                            break;
+                        default:
+                            sourceText = "Caption source: " + data.caption_source;
+                    }
+                    captionSource.textContent = sourceText;
+                } else {
+                    captionSource.textContent = '';
+                }
+                
+                // Show alternative captions if available
+                if (data.alternative_captions && data.alternative_captions.length > 0) {
+                    alternativeCaptions.style.display = 'block';
+                    altCaptionsList.innerHTML = '';
+                    
+                    // Store all captions including the primary one
+                    const allCaptions = [data.caption].concat(data.alternative_captions);
+                    
+                    data.alternative_captions.forEach((caption, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'alt-caption-item';
+                        div.textContent = caption;
+                        div.title = 'Click to select this caption';
+                        div.dataset.index = index + 1; // +1 because 0 is the primary caption
+                        
+                        div.addEventListener('click', () => {
+                            // Update primary caption
+                            captionText.textContent = caption;
+                            currentCaption = caption;
+                            
+                            // Reset translation when caption changes
+                            translatedCaption.style.display = 'none';
+                            languageSelect.value = '';
+                            translateBtn.disabled = true;
+                            
+                            // Mark this as selected
+                            document.querySelectorAll('.alt-caption-item').forEach(el => {
+                                el.classList.remove('selected');
+                            });
+                            div.classList.add('selected');
+                            
+                            // Optional: Update caption source if available
+                            if (data.caption_sources && data.caption_sources.length > index) {
+                                updateCaptionSource(data.caption_sources[index]);
+                            }
+                        });
+                        
+                        altCaptionsList.appendChild(div);
+                    });
+                } else {
+                    alternativeCaptions.style.display = 'none';
+                }
+                
+                // Helper function to update caption source display
+                function updateCaptionSource(source) {
+                    let sourceText = "";
+                    switch(source) {
+                        case "ensemble":
+                            sourceText = "Generated by ensemble AI model";
+                            break;
+                        case "transformer":
+                            sourceText = "Generated by advanced AI model";
+                            break;
+                        case "scene":
+                            sourceText = "Generated by scene understanding";
+                            break;
+                        case "neural":
+                            sourceText = "Generated by neural network";
+                            break;
+                        case "rule-based":
+                            sourceText = "Generated by rule-based analysis";
+                            break;
+                        case "category":
+                            sourceText = "Selected from category templates";
+                            break;
+                        default:
+                            sourceText = "Caption source: " + source;
+                    }
+                    captionSource.textContent = sourceText;
+                }
+                
+                // Show image analysis if available
+                const analysisDetails = document.getElementById('analysis-details');
+                if (data.analysis) {
+                    const analysis = data.analysis;
+                    
+                    let objectsHtml = '';
+                    if (analysis.detected_objects && analysis.detected_objects.length > 0) {
+                        objectsHtml = '<p>Detected objects: <strong>';
+                        objectsHtml += analysis.detected_objects.map(obj => 
+                            `${obj.name} (${(obj.confidence * 100).toFixed(1)}%)`
+                        ).join(', ');
+                        objectsHtml += '</strong></p>';
+                    }
+
+                    analysisDetails.innerHTML = `
+                        <p>Scene type: <strong>${analysis.scene_type}</strong></p>
+                        <p>Brightness: <strong>${(analysis.brightness * 100).toFixed(1)}%</strong></p>
+                        <p>Contrast: <strong>${(analysis.contrast * 100).toFixed(1)}%</strong></p>
+                        <p>Dominant colors: <strong>${analysis.dominant_colors.join(', ') || 'None detected'}</strong></p>
+                        <p>Faces detected: <strong>${analysis.has_faces}</strong></p>
+                        ${objectsHtml}
+                    `;
+                } else {
+                    analysisDetails.innerHTML = '<p>No image analysis available</p>';
+                }
+                
+                // Show feature stats if available
+                if (data.features) {
+                    const stats = data.features;
+                    featureStats.innerHTML = `
+                        <p><strong>CNN Feature Information:</strong></p>
+                        <p>Shape: ${stats.shape.join(' × ')}</p>
+                        <p>Range: ${stats.min.toFixed(4)} to ${stats.max.toFixed(4)}</p>
+                        <p>Mean value: ${stats.mean.toFixed(4)}</p>
+                        <p>Standard deviation: ${stats.std.toFixed(4)}</p>
+                    `;
+                } else {
+                    featureStats.innerHTML = '';
+                }
+            })
+            .catch(error => {
+                loadingDiv.style.display = 'none';
+                showError('An error occurred while processing the image');
+                console.error('Error:', error);
+            });
+        }
+        
+        // Generate a new caption for the same image
+        generateNewBtn.addEventListener('click', () => {
+            if (selectedFile) {
+                processSelectedImage();
+            }
+        });
+        
+        // Upload a new image
+        uploadNewBtn.addEventListener('click', () => {
+            // Reset and go back to upload screen
+            selectedFile = null;
+            currentCaption = '';
+            uploadBtn.disabled = true;
+            resultsContainer.style.display = 'none';
+            translationContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Clear the file input so the same file can be selected again if desired
+            fileInput.value = '';
+        });
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+        
+        function translateCaption() {
+            const selectedLanguage = languageSelect.value;
+            const textToTranslate = currentCaption;
+            
+            if (!selectedLanguage || !textToTranslate) {
+                showError('Please select a language and ensure a caption is available');
+                return;
+            }
+            
+            // Disable the translate button and show loading state
+            translateBtn.disabled = true;
+            translateBtn.textContent = 'Translating...';
+            translatedCaption.style.display = 'none';
+            
+            // Send translation request
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: textToTranslate,
+                    target_lang: selectedLanguage
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showError(`Translation failed: ${data.error}`);
+                } else {
+                    // Show translated caption
+                    translatedCaptionText.textContent = data.translated_text;
+                    translatedCaption.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Translation error:', error);
+                showError('Translation failed. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable the translate button
+                translateBtn.disabled = false;
+                translateBtn.textContent = 'Translate';
+            });
+        }
+    </script>
+</body>
+</html>

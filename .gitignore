@@ -1,0 +1,53 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env
+.env.*
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Application specific - only keep the .gitkeep file in uploads
+uploads/*
+!uploads/.gitkeep
+
+# Large model files and weights
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.bin
+*.onnx
+*.tflite
+*.pb
+
+# Cached model outputs
+*_cache/
