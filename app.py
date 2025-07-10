@@ -716,8 +716,8 @@ def translate_text():
 
 if __name__ == '__main__':
     print("Starting Flask server...")
-    print("Server will be available at: http://127.0.0.1:5000")
+    print("Server will be available at: http://127.0.0.1:8000")
     print("Press Ctrl+C to stop the server")
     
-    # Start the Flask development server
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    # Start the Flask development server on port 8000 to avoid AirPlay conflict
+    app.run(debug=True, host='127.0.0.1', port=8000, threaded=True)

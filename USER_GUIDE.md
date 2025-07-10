@@ -11,11 +11,11 @@ cd /Users/bandisanjay/Desktop/DL
 python app.py
 ```
 
-The server will start at: http://127.0.0.1:5000
+The server will start at: http://127.0.0.1:8000
 
 ### 2. Open the Web Interface
 
-Open your web browser and go to: **http://127.0.0.1:5000**
+Open your web browser and go to: **http://127.0.0.1:8000**
 
 ### 3. Upload Images
 
