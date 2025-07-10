@@ -12,7 +12,7 @@ A sophisticated web-based application that generates high-quality, contextually 
 ## ✨ Features
 
 - 🤖 **Advanced AI Models**: Uses ViT-GPT2 transformer and ensemble methods
-- 🎯 **Multiple Captions**: Generates 5-10 diverse captions per image
+- 🎯 **Curated Captions**: Generates 4-5 high-quality, recommended captions per image
 - 🎨 **Caption Styles**: Descriptive, artistic, technical, and casual variations
 - 🌐 **Web Interface**: Modern, responsive browser-based application with enhanced UI
 - 🔗 **Image URL Support**: Caption images from URLs or file uploads
@@ -96,7 +96,8 @@ with open('image.jpg', 'rb') as f:
 
 result = response.json()
 print(f"Best caption: {result['caption']}")
-print(f"Alternatives: {result['alternative_captions']}")
+print(f"Alternative captions: {result['alternative_captions']}")
+print(f"Total captions: {len(result['alternative_captions']) + 1}")  # Primary + alternatives
 ```
 
 ### Command Line Testing
