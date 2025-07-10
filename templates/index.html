@@ -192,10 +192,29 @@
         
         /* Language selector styles */
         .translation-container {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #ecf0f1;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
             display: none;
+            position: relative;
+        }
+        
+        .translation-container::before {
+            content: '🌐';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #9b59b6;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
         
         .language-selector {
@@ -205,34 +224,52 @@
         .language-selector label {
             display: block;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             color: #2c3e50;
+            font-size: 1.1rem;
         }
         
         .language-select {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             font-size: 1rem;
             background-color: white;
             cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .language-select:focus {
+            border-color: #9b59b6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
+        }
+        
+        .language-select option[disabled] {
+            font-weight: bold;
+            color: #7f8c8d;
+            background-color: #f8f9fa;
         }
         
         .translate-btn {
             background-color: #9b59b6;
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            border-radius: 5px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+            font-weight: 600;
+            min-width: 120px;
         }
         
-        .translate-btn:hover {
+        .translate-btn:hover:not(:disabled) {
             background-color: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3);
         }
         
         .translate-btn:disabled {
@@ -241,25 +278,51 @@
         }
         
         .translated-caption {
-            background-color: #f8f9fa;
-            border-left: 4px solid #9b59b6;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-top: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #9b59b6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
             display: none;
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.15);
+            position: relative;
+        }
+        
+        .translated-caption::before {
+            content: '✨';
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background: #9b59b6;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
         }
         
         .translated-caption-title {
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            color: #9b59b6;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .translated-caption-text {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             line-height: 1.6;
-            color: #34495e;
+            color: #2c3e50;
+            font-weight: 500;
+            font-style: italic;
+            background-color: rgba(155, 89, 182, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #9b59b6;
         }
     </style>
 </head>
@@ -318,42 +381,59 @@
                     <!-- Language Translation Section -->
                     <div id="translation-container" class="translation-container">
                         <div class="language-selector">
-                            <label for="language-select">Translate caption to:</label>
+                            <label for="language-select">🌍 Translate caption to your preferred language:</label>
                             <select id="language-select" class="language-select">
                                 <option value="">Select a language</option>
-                                <option value="es">Spanish</option>
-                                <option value="fr">French</option>
-                                <option value="de">German</option>
-                                <option value="it">Italian</option>
-                                <option value="pt">Portuguese</option>
-                                <option value="ru">Russian</option>
-                                <option value="ja">Japanese</option>
-                                <option value="ko">Korean</option>
-                                <option value="zh">Chinese (Simplified)</option>
-                                <option value="zh-tw">Chinese (Traditional)</option>
-                                <option value="ar">Arabic</option>
-                                <option value="hi">Hindi</option>
-                                <option value="th">Thai</option>
-                                <option value="vi">Vietnamese</option>
-                                <option value="nl">Dutch</option>
-                                <option value="sv">Swedish</option>
-                                <option value="da">Danish</option>
-                                <option value="no">Norwegian</option>
-                                <option value="fi">Finnish</option>
-                                <option value="pl">Polish</option>
-                                <option value="tr">Turkish</option>
-                                <option value="he">Hebrew</option>
-                                <option value="cs">Czech</option>
-                                <option value="hu">Hungarian</option>
-                                <option value="ro">Romanian</option>
-                                <option value="bg">Bulgarian</option>
-                                <option value="hr">Croatian</option>
-                                <option value="sk">Slovak</option>
-                                <option value="sl">Slovenian</option>
-                                <option value="et">Estonian</option>
-                                <option value="lv">Latvian</option>
-                                <option value="lt">Lithuanian</option>
-                                <option value="mt">Maltese</option>
+                                <!-- Top 5 Recommended Languages -->
+                                <option value="te">🇮🇳 Telugu (తెలుగు)</option>
+                                <option value="hi">🇮🇳 Hindi (हिन्दी)</option>
+                                <option value="ta">🇮🇳 Tamil (தமிழ்)</option>
+                                <option value="es">🇪🇸 Spanish (Español)</option>
+                                <option value="fr">🇫🇷 French (Français)</option>
+                                <option disabled>──────────────────</option>
+                                <!-- Other Indian Languages -->
+                                <option value="bn">🇮🇳 Bengali (বাংলা)</option>
+                                <option value="mr">🇮🇳 Marathi (मराठी)</option>
+                                <option value="gu">🇮🇳 Gujarati (ગુજરાતી)</option>
+                                <option value="kn">🇮🇳 Kannada (ಕನ್ನಡ)</option>
+                                <option value="ml">🇮🇳 Malayalam (മലയാളം)</option>
+                                <option value="pa">🇮🇳 Punjabi (ਪੰਜਾਬੀ)</option>
+                                <option value="or">🇮🇳 Odia (ଓଡ଼ିଆ)</option>
+                                <option value="as">🇮🇳 Assamese (অসমীয়া)</option>
+                                <option disabled>──────────────────</option>
+                                <!-- Major World Languages -->
+                                <option value="zh">🇨🇳 Chinese (Simplified)</option>
+                                <option value="zh-tw">🇹🇼 Chinese (Traditional)</option>
+                                <option value="ja">🇯🇵 Japanese (日本語)</option>
+                                <option value="ko">🇰🇷 Korean (한국어)</option>
+                                <option value="ar">🇸🇦 Arabic (العربية)</option>
+                                <option value="ru">🇷🇺 Russian (Русский)</option>
+                                <option value="de">🇩🇪 German (Deutsch)</option>
+                                <option value="it">🇮🇹 Italian (Italiano)</option>
+                                <option value="pt">🇵🇹 Portuguese (Português)</option>
+                                <option value="nl">🇳🇱 Dutch (Nederlands)</option>
+                                <option disabled>──────────────────</option>
+                                <!-- Other Languages -->
+                                <option value="th">🇹🇭 Thai (ไทย)</option>
+                                <option value="vi">🇻🇳 Vietnamese (Tiếng Việt)</option>
+                                <option value="tr">🇹🇷 Turkish (Türkçe)</option>
+                                <option value="pl">🇵🇱 Polish (Polski)</option>
+                                <option value="sv">🇸🇪 Swedish (Svenska)</option>
+                                <option value="da">🇩🇰 Danish (Dansk)</option>
+                                <option value="no">🇳🇴 Norwegian (Norsk)</option>
+                                <option value="fi">🇫🇮 Finnish (Suomi)</option>
+                                <option value="he">🇮🇱 Hebrew (עברית)</option>
+                                <option value="cs">🇨🇿 Czech (Čeština)</option>
+                                <option value="hu">🇭🇺 Hungarian (Magyar)</option>
+                                <option value="ro">🇷🇴 Romanian (Română)</option>
+                                <option value="bg">🇧🇬 Bulgarian (Български)</option>
+                                <option value="hr">🇭🇷 Croatian (Hrvatski)</option>
+                                <option value="sk">🇸🇰 Slovak (Slovenčina)</option>
+                                <option value="sl">🇸🇮 Slovenian (Slovenščina)</option>
+                                <option value="et">🇪🇪 Estonian (Eesti)</option>
+                                <option value="lv">🇱🇻 Latvian (Latviešu)</option>
+                                <option value="lt">🇱🇹 Lithuanian (Lietuvių)</option>
+                                <option value="mt">🇲🇹 Maltese (Malti)</option>
                             </select>
                             <button id="translate-btn" class="translate-btn" disabled>Translate</button>
                         </div>

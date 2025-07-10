@@ -14,12 +14,24 @@ A sophisticated web-based application that generates high-quality, contextually 
 - 🤖 **Advanced AI Models**: Uses ViT-GPT2 transformer and ensemble methods
 - 🎯 **Multiple Captions**: Generates 5-10 diverse captions per image
 - 🎨 **Caption Styles**: Descriptive, artistic, technical, and casual variations
-- 🌐 **Web Interface**: Modern, responsive browser-based application
-- 🌍 **Language Translation**: Translate captions into 30+ languages
+- 🌐 **Web Interface**: Modern, responsive browser-based application with enhanced UI
+- 🔗 **Image URL Support**: Caption images from URLs or file uploads
+- 🌍 **Language Translation**: Translate captions into 30+ languages, including Hindi, Telugu, Tamil, and other Indian languages
 - 📱 **Mobile Friendly**: Works seamlessly on all devices
 - ⚡ **Real-Time**: Fast processing with 3-4 second response times
 - 🔍 **Image Analysis**: Color analysis, object detection, scene understanding
 - 🎪 **Ensemble Approach**: Combines multiple AI models for superior results
+- ✨ **Enhanced UI**: Smooth animations, visually highlighted captions, and modern styling
+
+## 🎨 UI Features
+
+- **Animated Effects**: Smooth transitions and loading animations
+- **High Visibility Captions**: Emphasized caption display with contrasting backgrounds and borders
+- **Gradient Backgrounds**: Modern, subtle gradient backgrounds for visual appeal
+- **Responsive Design**: Adapts to all screen sizes and devices
+- **Interactive Elements**: Hover effects for buttons and inputs
+- **Visual Hierarchy**: Clear section organization with visual separation
+- **Accessibility**: High contrast text and clear visual cues
 
 ## 🚀 Quick Start
 
